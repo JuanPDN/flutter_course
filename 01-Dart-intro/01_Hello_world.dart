@@ -6,8 +6,8 @@ const myName = 'Juan';
 // late final myName;
 // String myName = 'Juan'
 
-  print('Hola $myName')
-  print('Hola ${myName.toUppercase()}')
-  print('Hola ${ 1 + 1 }')
+  print('Hola $myName');
+  print('Hola ${myName.toUpperCase()}');
+  print('Hola ${ 1 + 1 }');
 
 }
