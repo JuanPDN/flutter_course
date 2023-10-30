@@ -12,7 +12,7 @@ void main() {
   print('List: ${reversedNumber.toList()}');
   print('Set: ${reversedNumber.toSet()}');
 
-  final numbersGreaterThan5 = numbers.where((num) {
+  final numbersGreaterThan5 = numbers.where((int num) {
     return num > 5;
   });
   print('> 5  iterable: $numbersGreaterThan5');
