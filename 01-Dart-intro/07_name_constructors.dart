@@ -20,7 +20,7 @@ class Hero {
   Hero.fromJson(Map<String, dynamic> json)
       : name = json['name'] ?? 'No name found',
         power = json['power'] ?? 'No power found',
-        isAlive = json['isAlive'] ?? 'No isAlive found';
+        isAlive = json['isAlive'];
 
   @override
   String toString() {
