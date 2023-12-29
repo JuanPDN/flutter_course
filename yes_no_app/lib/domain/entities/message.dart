@@ -5,5 +5,9 @@ class Message {
   final String? image;
   final FromWho fromWho;
 
-  Message({required this.text, this.image, required this.fromWho});
+  Message({
+    required this.text,
+    this.image,
+    required this.fromWho
+  });
 }
