@@ -7,6 +7,8 @@ class DiscoverProvider extends ChangeNotifier {
   bool initialLoadin = true;
   List<VideoPost> videos = [];
 
+//TODO: Repository, DataSource
+
   Future<void> loadNextPage() async {
     await Future.delayed(const Duration(seconds: 2));
 
