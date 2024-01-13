@@ -48,6 +48,6 @@ const List<MenuItem> appMenuItem = [
       title: 'Introduccion a la aplicacion',
       subTitle: 'Pequeño tutorial introductorio',
       link: '/app_tutorial',
-      icon: Icons.accessibility_rounded),
+      icon: Icons.accessible_outlined),
 
 ];
