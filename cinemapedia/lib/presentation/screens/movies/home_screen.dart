@@ -39,16 +39,53 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
 
-    return Column(
-      children: [
-        const CustomAppbar(),
-        MoviesSlideShow(movies: slideShowMovies),
-        MovieHorizontalListView(
-          movies: nowPlayingMovies,
-          title: 'En cines',
-          subTitle: 'Lunes 22',
+    return CustomScrollView(slivers: [
+      const SliverAppBar(
+        floating: true,
+        flexibleSpace: FlexibleSpaceBar(
+          titlePadding: EdgeInsets.zero,
+          title: CustomAppbar(),
         ),
-      ],
-    );
+      ),
+      SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+        return Column(
+          children: [
+            //const CustomAppbar(),
+            MoviesSlideShow(movies: slideShowMovies),
+            MovieHorizontalListView(
+              loadNextPage: () =>
+                  ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+              movies: nowPlayingMovies,
+              title: 'En cines',
+              subTitle: 'Lunes 22',
+            ),
+            MovieHorizontalListView(
+              loadNextPage: () =>
+                  ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+              movies: nowPlayingMovies,
+              title: 'Proximamente',
+              subTitle: 'En este mes',
+            ),
+            MovieHorizontalListView(
+              loadNextPage: () =>
+                  ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+              movies: nowPlayingMovies,
+              title: 'Populares',
+            ),
+            MovieHorizontalListView(
+              loadNextPage: () =>
+                  ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+              movies: nowPlayingMovies,
+              title: 'Mejor Calificadas',
+              subTitle: 'Desde Siempre',
+            ),
+            const SizedBox(
+              height: 50,
+            )
+          ],
+        );
+      }, childCount: 1))
+    ]);
   }
 }

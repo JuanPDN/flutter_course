@@ -3,7 +3,7 @@ import 'package:cinemapedia/config/helpers/huma_formats.dart';
 import 'package:cinemapedia/domain/entities/movies.dart';
 import 'package:flutter/material.dart';
 
-class MovieHorizontalListView extends StatelessWidget {
+class MovieHorizontalListView extends StatefulWidget {
   const MovieHorizontalListView(
       {super.key,
       required this.movies,
@@ -17,20 +17,47 @@ class MovieHorizontalListView extends StatelessWidget {
   final VoidCallback? loadNextPage;
 
   @override
+  State<MovieHorizontalListView> createState() =>
+      _MovieHorizontalListViewState();
+}
+
+class _MovieHorizontalListViewState extends State<MovieHorizontalListView> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (widget.loadNextPage == null) return;
+      if ((scrollController.position.pixels + 200) >=
+          scrollController.position.maxScrollExtent) {
+        widget.loadNextPage!();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 350,
       child: Column(
         children: [
-          if (title != null || subTitle != null)
-            _Title(title: title, subTitle: subTitle),
+          if (widget.title != null || widget.subTitle != null)
+            _Title(title: widget.title, subTitle: widget.subTitle),
           Expanded(
             child: ListView.builder(
-              itemCount: movies.length,
+              controller: scrollController,
+              itemCount: widget.movies.length,
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return _Slide(movie: movies[index]);
+                return _Slide(movie: widget.movies[index]);
               },
             ),
           )
@@ -97,13 +124,25 @@ class _Slide extends StatelessWidget {
 
           SizedBox(
             width: 150,
-            child: Row(children: [
-              Icon(Icons.star_half_outlined, color: Colors.yellow.shade800,),
-              const SizedBox(width: 3,),
-              Text('${movie.voteAverage}',style: textStyle.bodyMedium?.copyWith(color: Colors.yellow.shade800),),
-              const Spacer(),
-              Text(HumanFormats.number(movie.popularity),style: textStyle.bodySmall),
-            ],),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.star_half_outlined,
+                  color: Colors.yellow.shade800,
+                ),
+                const SizedBox(
+                  width: 3,
+                ),
+                Text(
+                  '${movie.voteAverage}',
+                  style: textStyle.bodyMedium
+                      ?.copyWith(color: Colors.yellow.shade800),
+                ),
+                const Spacer(),
+                Text(HumanFormats.number(movie.popularity),
+                    style: textStyle.bodySmall),
+              ],
+            ),
           )
         ],
       ),
