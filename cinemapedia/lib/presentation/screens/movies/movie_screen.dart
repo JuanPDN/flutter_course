@@ -86,7 +86,7 @@ class _CustomSliverAppBar extends StatelessWidget {
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.topLeft,
-                          stops: [0.0, 0.3],
+                          stops: [0.0, 0.25],
                           colors: [Colors.black87, Colors.transparent]))),
             ),
           ],
