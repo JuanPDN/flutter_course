@@ -1,4 +1,4 @@
-export 'package:cinemapedia/presentation/widgets/delegates/ssearch_movie_delegate.dart';
+export 'package:cinemapedia/presentation/widgets/delegates/search_movie_delegate.dart';
 export 'package:cinemapedia/presentation/widgets/movies/movie_horizontal_listview.dart';
 export 'package:cinemapedia/presentation/widgets/movies/movies_slideshow.dart';
 export 'package:cinemapedia/presentation/widgets/shared/custom_appbar.dart';
