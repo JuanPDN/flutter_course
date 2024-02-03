@@ -75,7 +75,7 @@ class _Slide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
-
+    final size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 8,
@@ -92,6 +92,7 @@ class _Slide extends StatelessWidget {
                 fit: BoxFit.cover,
                 movie.posterPath,
                 width: 150,
+                height:size.height * 0.26 ,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress != null) {
                     return const Padding(

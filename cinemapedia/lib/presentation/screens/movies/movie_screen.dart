@@ -1,7 +1,9 @@
-import 'package:animate_do/animate_do.dart';
-import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:animate_do/animate_do.dart';
+
+import 'package:cinemapedia/presentation/providers/providers.dart';
 
 import '../../../domain/entities/movies.dart';
 
@@ -180,13 +182,20 @@ class _ActorsByMovie extends ConsumerWidget {
   }
 }
 
-class _CustomSliverAppBar extends StatelessWidget {
-  final Movie movie;
+final isFavoriteProvider = FutureProvider.family.autoDispose((ref, int movieId) {
+  final localStorageRepsotory =
+      ref.watch(localStorageRepositoryProvider).isMovieFavorite(movieId);
+  return localStorageRepsotory;
+});
 
+class _CustomSliverAppBar extends ConsumerWidget {
+  final Movie movie;
   const _CustomSliverAppBar({required this.movie});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    final isFavoriteFuture = ref.watch(isFavoriteProvider(movie.id));
     final size = MediaQuery.of(context).size;
 
     return SliverAppBar(
@@ -194,40 +203,50 @@ class _CustomSliverAppBar extends StatelessWidget {
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
       actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border_rounded))
+        IconButton(
+            onPressed: () {
+              ref.watch(localStorageRepositoryProvider).toggleFavorite(movie);
+              ref.invalidate(isFavoriteProvider(movie.id));
+            },
+            icon: isFavoriteFuture.when(
+              loading: () =>const CircularProgressIndicator(strokeWidth: 2,),
+              data: (isFavorite) => isFavorite 
+              ? const Icon(Icons.favorite_rounded, color: Colors.red,)
+              : const Icon(Icons.favorite_border_rounded) ,
+              error: (_, __) => throw UnimplementedError(),
+              )
+        )
         //icon: const Icon(Icons.favorite_rounded, color: Colors.red,))
       ],
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        background: Stack(
-          children: [
-            SizedBox.expand(
-              child: Image.network(
-                movie.posterPath,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) return const SizedBox();
-                  return FadeIn(child: child);
-                },
-              ),
+        background: Stack(children: [
+          SizedBox.expand(
+            child: Image.network(
+              movie.posterPath,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress != null) return const SizedBox();
+                return FadeIn(child: child);
+              },
             ),
-            const _CustomGradient(
-                stops: [0.8, 1.0],
-                colors: [Colors.transparent, Colors.black54],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter),
-            const _CustomGradient(
-                stops: [0.0, 0.25],
-                colors: [Colors.black87, Colors.transparent],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight),
-            const _CustomGradient(
-                stops: [0.0, 0.2],
-                colors: [Colors.black54, Colors.transparent],
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft),
-          ]
-        ),
+          ),
+          const _CustomGradient(
+              stops: [0.8, 1.0],
+              colors: [Colors.transparent, Colors.black54],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter),
+          const _CustomGradient(
+              stops: [0.0, 0.25],
+              colors: [Colors.black87, Colors.transparent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight),
+          const _CustomGradient(
+              stops: [0.0, 0.2],
+              colors: [Colors.black54, Colors.transparent],
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft),
+        ]),
       ),
     );
   }
