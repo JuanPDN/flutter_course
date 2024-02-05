@@ -19,7 +19,7 @@ class PopularViewState extends ConsumerState<PopularView> {
       return const Center(child: CircularProgressIndicator(strokeWidth: 2));
     }
 
-    void loadNextPage() async {
+    Future<void> loadNextPage() async {
       return await ref.read(populaMoviesProvider.notifier).loadNextPage();
     }
 
