@@ -36,7 +36,8 @@ class FavoritesViewState extends ConsumerState<FavoritesView> {
   @override
   Widget build(BuildContext context) {
     final favoritesMovies = ref.watch(favoriteMoviesProvider).values.toList();
-
+    bool isDark = false;
+    if(Theme.of(context).brightness == Brightness.dark) isDark = true;
 
     if(favoritesMovies.isEmpty){
       final color = Theme.of(context).colorScheme;
@@ -47,7 +48,7 @@ class FavoritesViewState extends ConsumerState<FavoritesView> {
           children: [
             Icon(Icons.favorite_outline_sharp, size: 60, color: color.primary,),
             Text('Ohhh no!!', style: TextStyle(fontSize: 30, color: color.primary),),
-            const Text('No tienes peliculas favoritas', style: TextStyle(fontSize: 20, color: Colors.black45),),
+            Text('No tienes peliculas favoritas', style: TextStyle(fontSize: 20, color:(isDark) ? Colors.white: Colors.black45),),
             const SizedBox(height: 20,),
             FilledButton.tonal(onPressed: ()=>context.go('/home/0'), child: const Text('Home'))
           ]
