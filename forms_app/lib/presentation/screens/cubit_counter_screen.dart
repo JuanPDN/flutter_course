@@ -16,17 +16,24 @@ class CubitCounterScreen extends StatelessWidget {
 class _CubitCouterVIew extends StatelessWidget {
   const _CubitCouterVIew();
 
+    
+  void increaseCounterBy(BuildContext context, [int value = 1]){
+    context.read<CounterCubit>().incraseBy(value);
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    final counterState = context.watch<CounterCubit>().state;
+//      final counterState = context.watch<CounterCubit>().state;
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Cubit counter: ${counterState.transactionCount}'),
+          title: context.select((CounterCubit value) {
+            return Text('Cubit coounter: ${value.state.transactionCount}');
+          }),
           actions: [
             IconButton(
-                onPressed: () => {}, icon: const Icon(Icons.refresh_rounded))
+                onPressed: () => {context.read<CounterCubit>().reset()},
+                icon: const Icon(Icons.refresh_rounded))
           ],
         ),
         body: Center(child: BlocBuilder<CounterCubit, CounterState>(
@@ -41,7 +48,7 @@ class _CubitCouterVIew extends StatelessWidget {
             FloatingActionButton(
               heroTag: '1',
               child: const Text('+3'),
-              onPressed: () => {},
+              onPressed: () => increaseCounterBy(context, 3),
             ),
             const SizedBox(
               height: 15,
@@ -49,7 +56,7 @@ class _CubitCouterVIew extends StatelessWidget {
             FloatingActionButton(
               heroTag: '2',
               child: const Text('+2'),
-              onPressed: () => {},
+              onPressed: () => increaseCounterBy(context, 2),
             ),
             const SizedBox(
               height: 15,
@@ -57,7 +64,7 @@ class _CubitCouterVIew extends StatelessWidget {
             FloatingActionButton(
               heroTag: '3',
               child: const Text('+1'),
-              onPressed: () => {},
+              onPressed: () => increaseCounterBy(context),
             ),
           ],
         ));
