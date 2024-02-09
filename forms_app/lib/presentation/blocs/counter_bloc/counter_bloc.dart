@@ -20,4 +20,8 @@ class CounterBloc extends Bloc<CounterEvent, CounterState> {
         counter: 0,
     ));
   }
+void increasedBy([int value = 1]){
+  add(CounterIncreased(value));
+}
+
 }
