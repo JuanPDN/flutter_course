@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:forms_app/infrastructure/inputs/inputs.dart';
 import 'package:formz/formz.dart';
+import 'package:forms_app/infrastructure/inputs/inputs.dart';
 
 part 'register_state.dart';
 
