@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "31765996503",
+    "project_id": "flutter-projects-60bca",
+    "storage_bucket": "flutter-projects-60bca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31765996503:android:04be0ecd3ee850209be192",
+        "android_client_info": {
+          "package_name": "com.juanpablodelgado.push_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhFXmxx8Um3sMggMr2R5_jpFjFKF8tJ3E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
