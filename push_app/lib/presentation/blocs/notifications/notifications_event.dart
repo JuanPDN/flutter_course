@@ -6,3 +6,10 @@ sealed class NotificationsEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+
+class NotificationStatusChanged extends NotificationsEvent {
+  final AuthorizationStatus status;
+
+  const NotificationStatusChanged(this.status);
+}
