@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:push_app/config/local_notifications/local_notifications.dart';
 
 import 'package:push_app/domain/entities/push_message.dart';
 import '../../../firebase_options.dart';
@@ -22,11 +21,21 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  int pushNumberId = 0;
 
-  NotificationsBloc() : super(const NotificationsState()) {
+  final Future<void> Function()? requestLocalNotificationPermission;
+  final void Function({
+    required int id,
+    String? title,
+    String? body,
+    String? data,
+  })? showLocalNotification;
+
+  NotificationsBloc(
+      {this.requestLocalNotificationPermission, this.showLocalNotification})
+      : super(const NotificationsState()) {
     on<NotificationStatusChanged>(_notificationStatusChange);
     on<NotificationRecived>(_onPushMessageRecived);
-
 
     _initialStatusCheck();
     _foregroundMessage();
@@ -57,9 +66,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   void _onPushMessageRecived(
       NotificationRecived event, Emitter<NotificationsState> emit) {
-    emit(
-      state.copyWith(notifications: [event.pushMessage, ...state.notifications])
-    );
+    emit(state
+        .copyWith(notifications: [event.pushMessage, ...state.notifications]));
   }
 
   void handleRemoteMessage(RemoteMessage message) {
@@ -75,6 +83,13 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
             ? message.notification!.android?.imageUrl
             : message.notification!.apple?.imageUrl);
 
+    if (showLocalNotification != null) {
+      showLocalNotification!(
+          id: ++pushNumberId,
+          body: notification.body,
+          title: notification.title,
+          data: notification.messageId);
+    }
     add(NotificationRecived(notification));
   }
 
@@ -92,14 +107,19 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       provisional: false,
       sound: true,
     );
-    await requestPermissionLocalNotification();
+
+    if (requestLocalNotificationPermission != null) {
+      await requestLocalNotificationPermission!();
+    }
     add(NotificationStatusChanged(settings.authorizationStatus));
   }
 
-  PushMessage? getMessageById( String pushMessageId){
-    final exist = state.notifications.any((element) => element.messageId == pushMessageId);
-    if( !exist ) return null;
+  PushMessage? getMessageById(String pushMessageId) {
+    final exist = state.notifications
+        .any((element) => element.messageId == pushMessageId);
+    if (!exist) return null;
 
-    return state.notifications.firstWhere((element) => element.messageId == pushMessageId);
+    return state.notifications
+        .firstWhere((element) => element.messageId == pushMessageId);
   }
 }
