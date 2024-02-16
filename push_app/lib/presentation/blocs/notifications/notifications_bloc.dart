@@ -59,7 +59,12 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   }
 
   void _getFCMToken() async {
-    final token = await messaging.getToken();
+    if (Platform.isAndroid) {
+      final token = await messaging.getToken();
+      if (state.status != AuthorizationStatus.authorized) return;
+      print(token);
+    }
+    final token = await messaging.getAPNSToken();
     if (state.status != AuthorizationStatus.authorized) return;
     print(token);
   }

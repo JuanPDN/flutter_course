@@ -14,17 +14,24 @@ class LocalNotifications {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const initializationSettingsAndroid =
         AndroidInitializationSettings('app_icon');
+    const initializationSettingsDarwin = DarwinInitializationSettings(
+        onDidReceiveLocalNotification: iosShowNotification);
 
-    const initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse
-    );
+    const initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsDarwin);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
   }
 
   static void onDidReceiveNotificationResponse(NotificationResponse response) {
     appRouter.push('/push-details/${response.payload}');
+  }
+
+  static void iosShowNotification(
+      int id, String? title, String? body, String? data) {
+    localNotification(id: id, title: title, body: body, data: data);
   }
 
   static void localNotification({
@@ -39,10 +46,17 @@ class LocalNotifications {
         sound: RawResourceAndroidNotificationSound('notification'),
         importance: Importance.max,
         priority: Priority.high);
-    const notificationDetails = NotificationDetails(android: androidDetails);
+
+    const notificationDetails = NotificationDetails(
+        android: androidDetails,
+        iOS: DarwinNotificationDetails(
+          presentSound: true,
+          
+        ));
 
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails, payload: data);
+    flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails,
+        payload: data);
   }
 }
