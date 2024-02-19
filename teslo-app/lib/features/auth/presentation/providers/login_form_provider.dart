@@ -2,6 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
 
+final loginFormProvider =
+    StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormSate>((ref) {
+  return LoginFormNotifier();
+});
+
+
 class LoginFormSate {
   final bool isPosting;
   final bool isFormPosted;
@@ -75,8 +81,3 @@ class LoginFormNotifier extends StateNotifier<LoginFormSate> {
         isValid: Formz.validate([email, password]));
   }
 }
-
-final loginFormProvider =
-    StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormSate>((ref) {
-  return LoginFormNotifier();
-});
