@@ -16,8 +16,17 @@ class AuthDataSourceImpl extends AuthDataSource {
           .post('/auth/login', data: {'email': email, 'password': password});
       final user = UserMapper.userJsonToEntity(response.data);
       return user;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw CustomError(
+            e.response?.data['message'] ?? 'Credenciales invalidas');
+      }
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw CustomError('Revisar conexion a internet');
+      }
+      throw Exception();
     } catch (e) {
-      throw WrongCredentials();
+      throw Exception();
     }
   }
 
