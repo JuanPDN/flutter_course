@@ -1,16 +1,25 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/auth/infrastructure/infrastructure.dart';
+import 'package:teslo_shop/features/shared/infrastructure/services/key_value_storage_service.dart';
+import 'package:teslo_shop/features/shared/infrastructure/services/key_value_storage_service_impl.dart';
 import '../../domain/domain.dart';
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final authRepository = AuthRepositoryImpl();
-  return AuthNotifier(authRepository: authRepository);
+  final keyValueStorageService = KeyValueStorageServiceImpl();
+
+  return AuthNotifier(
+      authRepository: authRepository,
+      keyValueStorageService: keyValueStorageService);
 });
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository authRepository;
+  final KeyValueStorageService keyValueStorageService;
 
-  AuthNotifier({required this.authRepository}) : super(AuthState());
+  AuthNotifier(
+      {required this.authRepository, required this.keyValueStorageService})
+      : super(AuthState());
 
   Future<void> loginUser(String email, String password) async {
     await Future.delayed(const Duration(milliseconds: 500));
@@ -31,6 +40,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(
       user: user,
       authStatus: AuthStatus.authenticated,
+      errorMessage: '',
     );
   }
 
