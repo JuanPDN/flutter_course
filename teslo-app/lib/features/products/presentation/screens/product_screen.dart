@@ -50,7 +50,12 @@ class _ProductView extends StatelessWidget {
           child: _ImageGallery(images: product.images),
         ),
         const SizedBox(height: 10),
-        Center(child: Text(product.title, style: textStyles.titleSmall)),
+        Center(
+            child: Text(
+          product.title,
+          style: textStyles.titleSmall,
+          textAlign: TextAlign.center,
+        )),
         const SizedBox(height: 10),
         _ProductInformation(product: product),
       ],
