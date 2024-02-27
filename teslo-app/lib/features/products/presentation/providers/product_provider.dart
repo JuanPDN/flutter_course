@@ -6,26 +6,24 @@ final productProvider = StateNotifierProvider.autoDispose
     .family<ProductNotifier, ProductState, String>((ref, productId) {
   final productsRepository = ref.watch(productsRepositoryProvider);
 
-
   return ProductNotifier(
-      productsRepository: productsRepository,
-      productId: productId);
+      productsRepository: productsRepository, productId: productId);
 });
 
 class ProductNotifier extends StateNotifier<ProductState> {
   final ProductsRepository productsRepository;
 
   ProductNotifier({required this.productsRepository, required String productId})
-      : super(ProductState(id: productId)){
-        loadProduct();
-      }
+      : super(ProductState(id: productId)) {
+    loadProduct();
+  }
 
   Product newEmptyProduct() {
     return Product(
       id: 'new',
       title: '',
       price: 0,
-      description:'',
+      description: '',
       slug: '',
       stock: 0,
       sizes: [],
@@ -37,24 +35,16 @@ class ProductNotifier extends StateNotifier<ProductState> {
 
   Future<void> loadProduct() async {
     try {
+      if (state.id == 'new') {
+        state = state.copyWith(isLoading: false, product: newEmptyProduct());
 
-      if(state.id == 'new'){
-
-        state = state.copyWith(
-          isLoading: false,
-          product: newEmptyProduct()
-        );
-        
         return;
       }
 
       final product = await productsRepository.getProductsById(state.id);
-      state = state.copyWith(
-        isLoading: false,        
-        product: product
-      );
+      state = state.copyWith(isLoading: false, product: product);
     } catch (e) {
-      print(e);
+      throw Exception();
     }
   }
 }
