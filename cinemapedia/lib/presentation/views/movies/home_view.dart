@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:cinemapedia/presentation/widgets/widgets.dart';
@@ -11,7 +12,8 @@ class HomeView extends ConsumerStatefulWidget {
   HomeViewState createState() => HomeViewState();
 }
 
-class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClientMixin {
+class HomeViewState extends ConsumerState<HomeView>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -25,8 +27,9 @@ class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClien
   Widget build(BuildContext context) {
     super.build(context);
     final initialLoading = ref.watch(initialLoadingProvider);
-
     if (initialLoading) return const FullScrennLoader();
+
+    FlutterNativeSplash.remove();
 
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final topRatedMovies = ref.watch(topRatedMoviesProvider);
@@ -76,7 +79,7 @@ class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClien
       }, childCount: 1))
     ]);
   }
-  
+
   @override
-   bool get wantKeepAlive => true;
+  bool get wantKeepAlive => true;
 }
